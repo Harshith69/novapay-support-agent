@@ -22,6 +22,12 @@ dashboard** — all built on a **zero-cost, open-source stack**.
 > **Built by [Harshith Narasimhamurthy](https://www.linkedin.com/in/harshithnarasimhamurthy69/)**
 > | harshithnchandan@gmail.com | +91-9663918804
 
+| | Link |
+|---|---|
+| **Live Demo** | [huggingface.co/spaces/Harshith69/novapay-support-agent](https://huggingface.co/spaces/Harshith69/novapay-support-agent) |
+| **GitHub Repo** | [github.com/Harshith69/novapay-support-agent](https://github.com/Harshith69/novapay-support-agent) |
+| **Fine-Tuned Model** | [huggingface.co/Harshith69/novapay-triage-gemma](https://huggingface.co/Harshith69/novapay-triage-gemma) |
+
 ---
 
 ## Table of Contents
