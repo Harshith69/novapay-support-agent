@@ -1,5 +1,5 @@
 # --- Core runtime (app, agents, RAG, evaluation) ---
-gradio>=4.0.0
+gradio>=5.0.0
 python-dotenv>=1.0.0
 # LLM providers (install the one you use; groq is the free default)
 groq>=0.11.0
