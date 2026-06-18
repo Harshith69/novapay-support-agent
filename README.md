@@ -1,16 +1,3 @@
----
-title: NovaPay Multi-Agent Support System
-emoji: 🏦
-colorFrom: indigo
-colorTo: blue
-sdk: gradio
-sdk_version: 5.31.0
-python_version: "3.11"
-app_file: app.py
-pinned: false
-license: mit
----
-
 # NovaPay Multi-Agent Customer Support System
 
 A **production-grade, multi-agent AI customer support system** for a fictional
