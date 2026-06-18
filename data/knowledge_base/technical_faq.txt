@@ -1,0 +1,69 @@
+NovaPay Technical Support FAQ
+=============================
+
+This document lists the supported troubleshooting steps for the NovaPay app.
+Agents must use only these steps and must not invent new ones.
+
+1. OTP Not Received
+-------------------
+- OTPs are valid for 10 minutes.
+- If the OTP does not arrive, the customer can tap "Resend OTP" after 60
+  seconds. A maximum of 3 OTP requests are allowed in a 30-minute window.
+- After 3 failed attempts, the SMS channel is locked for 30 minutes and the
+  customer should use "Get OTP via Email" instead, which sends the code to the
+  registered email address.
+- If email OTP also fails, verify the registered mobile number and email under
+  Profile > Contact Details, then escalate to Level 2.
+
+2. Biometric / Fingerprint Login Failure
+-----------------------------------------
+- Biometric login can break after an OS update or after re-registering a
+  fingerprint on the device.
+- Reset steps: Profile > Security > Biometric Login > toggle OFF, close the
+  app fully, reopen, then toggle Biometric Login ON and re-authenticate with
+  the device fingerprint/face unlock.
+- NovaPay supports biometric login only on devices with a hardware secure
+  enclave. On unsupported devices the customer must use the 6-digit PIN.
+
+3. Login Failure / "Invalid PIN"
+--------------------------------
+- After 5 consecutive wrong PIN entries the account is locked for 1 hour as a
+  security measure.
+- The customer can reset the PIN via "Forgot PIN", which requires a successful
+  OTP verification and answering the security question set during onboarding.
+- If the account remains locked after a successful PIN reset, escalate to
+  Level 2 — do not advise the customer to create a new account.
+
+4. Supported Device OS Versions
+-------------------------------
+- Android: version 9.0 and above.
+- iOS: version 14.0 and above.
+- On older OS versions the app may crash on launch. The only supported fix is
+  to update the operating system; NovaPay does not provide legacy builds.
+
+5. App Crashing
+---------------
+- First, ensure the app is updated to the latest version from the store.
+- Clear the app cache via Profile > Settings > Clear Cache (this does NOT log
+  the customer out or delete data).
+- If crashes persist after updating and clearing cache, collect the device
+  model and OS version and escalate to Level 2.
+
+6. Statement Download Failure
+-----------------------------
+- Statements are available under Account > Statements for the last 24 months.
+- Statements are generated as password-protected PDFs; the password is the
+  customer's date of birth in DDMMYYYY format.
+- If a download fails, retry on a stable network. Statements older than 24
+  months must be requested from support and are emailed within 2 business days.
+
+7. Reporting a Known Outage
+---------------------------
+- Customers can check live service status and report outages at
+  status.novapay.example/report.
+- During a declared outage, agents should acknowledge the outage, share the
+  status link, and avoid running individual troubleshooting steps that will not
+  help until service is restored.
+
+Escalation: any issue not resolved by these steps, or not listed here, must be
+escalated to the Level 2 team rather than guessed at.

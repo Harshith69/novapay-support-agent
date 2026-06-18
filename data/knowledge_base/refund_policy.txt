@@ -1,0 +1,66 @@
+NovaPay Refund Policy
+=====================
+
+Scope
+-----
+This policy governs all refunds, reversals and transaction disputes on the
+NovaPay digital banking app, covering UPI transfers, debit card payments,
+cashback, and subscription charges.
+
+1. Failed UPI Transfers (money debited, transfer failed)
+--------------------------------------------------------
+When a UPI transfer fails but the amount is debited from the customer's
+NovaPay account, the amount is auto-reversed within 3 business days. The
+customer does not need to file a separate request for an auto-reversal. If the
+reversal does not appear after 3 business days, the customer should raise a
+dispute from the Transactions screen using "Report an issue". NovaPay credits a
+goodwill amount of 50 INR if an auto-reversal exceeds 5 business days, in line
+with regulatory turnaround-time (TAT) guidelines.
+
+2. Disputed Charges (unauthorised or incorrect debit)
+-----------------------------------------------------
+Disputed card or merchant charges are investigated within a 7-day
+investigation window from the date the dispute is filed. During investigation,
+the disputed amount is NOT provisionally credited unless the transaction value
+is below 5,000 INR, in which case a provisional credit is issued within 48
+hours. The customer must file disputes within 60 days of the transaction date;
+disputes raised after 60 days are reviewed case-by-case and may be declined.
+
+3. Accidental Double Payments
+-----------------------------
+If a customer is charged twice for the same merchant transaction within a
+10-minute window, the duplicate is automatically detected and reversed within
+3 business days. If the two charges are more than 10 minutes apart, the
+customer must raise a dispute so the merchant can confirm the duplicate.
+
+4. Cashback Eligibility
+-----------------------
+Cashback is credited within 7 business days of a qualifying transaction.
+A transaction qualifies only if: (a) it is 250 INR or more, (b) it is not
+later refunded or reversed, and (c) the customer's account is in good standing
+(no overdue EMIs). Cashback that is not received within 7 business days can be
+claimed via "Report an issue" within 30 days of the transaction. Cashback on
+a refunded transaction is clawed back automatically.
+
+5. Refund Timelines Summary
+---------------------------
+- UPI auto-reversal: 3 business days
+- Duplicate payment reversal: 3 business days
+- Disputed charge investigation: 7 days
+- Provisional credit (under 5,000 INR): 48 hours
+- Cashback credit: 7 business days
+
+6. Escalation Path
+------------------
+If a refund is delayed beyond 10 days from the date it was due, the case is
+automatically escalated to a human Refund Resolution Officer. Customers may
+also request escalation explicitly at any time. Any disputed amount above
+50,000 INR is escalated to human review immediately and is never auto-approved
+by an agent. Suspected fraudulent transactions are routed to the Fraud team and
+the card is temporarily frozen pending verification.
+
+Important
+---------
+Support agents must never confirm or approve a refund amount without checking
+this policy. If a customer's scenario is not covered here, the agent must say
+they need to check with the team rather than inventing a policy detail.

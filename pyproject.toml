@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "novapay-support-agent"
+version = "0.1.0"
+description = "Multi-agent fintech customer support system for NovaPay (fine-tuned triage + RAG specialists + evaluation + robustness)."
+readme = "README.md"
+requires-python = ">=3.9"
+
+[tool.setuptools]
+# Top-level packages that must be importable from anywhere (editable install).
+packages = ["common", "rag", "agents", "evaluation", "robustness", "dashboard", "fine_tuning"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"

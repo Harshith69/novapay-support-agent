@@ -1,0 +1,69 @@
+NovaPay Billing & Subscriptions Guide
+=====================================
+
+This guide covers EMIs, premium plans, invoices and payment methods. Agents
+must quote figures exactly as written here.
+
+1. EMI Deduction Schedule
+-------------------------
+- EMIs for NovaPay personal loans are auto-debited on the 5th of every month.
+- If the 5th falls on a bank holiday or weekend, the debit moves to the next
+  business day.
+- A reminder notification is sent 3 days before each EMI date.
+- If an EMI fails due to insufficient balance, NovaPay retries once after 3
+  days. A late fee of 2% of the EMI amount applies if both attempts fail.
+
+2. EMI Deducted Twice
+---------------------
+- A duplicate EMI debit in the same billing cycle is automatically detected and
+  reversed within 5 business days.
+- The customer does not need to file a dispute for an auto-reversal, but should
+  contact support if the reversal does not appear after 5 business days.
+- Agents must never promise a manual instant reversal; the standard timeline is
+  5 business days.
+
+3. Premium Plan Pricing Tiers
+-----------------------------
+- Free: 0 INR/month — basic savings account, UPI, debit card.
+- Plus: 199 INR/month — higher UPI limits, 1% cashback, priority chat support.
+- Pro: 499 INR/month — everything in Plus, 2% cashback, free airport lounge
+  access twice per quarter, dedicated relationship manager.
+- Plans are billed on the same calendar date each month as the original signup
+  date. A 7-day free trial is available once per customer for Plus and Pro.
+
+4. Cancelling or Downgrading a Plan
+-----------------------------------
+- Customers can cancel or downgrade anytime via Profile > Subscription > Manage
+  Plan. Cancellation takes effect at the end of the current billing cycle; the
+  current month is not pro-rated or refunded.
+- If a customer is charged for a plan after cancelling, verify the cancellation
+  date. If the charge is after the effective cancellation, raise a billing
+  dispute for a full reversal.
+
+5. Updating a Payment Method
+----------------------------
+- Payment methods are managed under Profile > Payments > Saved Methods.
+- A newly added card or account becomes the default for the NEXT billing cycle,
+  not the current one.
+- At least one valid payment method must remain on file for accounts with an
+  active loan.
+
+6. Reading the NovaPay Invoice
+------------------------------
+- Invoices are issued on the 1st of each month and emailed as PDFs.
+- Each invoice lists: subscription charges, cashback credited, EMI debits,
+  applicable GST (18%), and any late fees.
+- Cashback is shown as a credit line and is not taxable.
+
+7. Interest Calculation Disputes
+--------------------------------
+- Personal loan interest is calculated on a reducing-balance basis at the
+  annual rate stated in the loan agreement.
+- If a customer disputes interest, agents should explain reducing-balance
+  calculation and direct them to the amortisation schedule under
+  Loans > My Loan > Schedule. Agents must not recompute or waive interest.
+
+8. High-Value Transactions
+--------------------------
+Any billing adjustment, waiver, or refund above 50,000 INR must be flagged for
+human review and never approved by an agent directly.

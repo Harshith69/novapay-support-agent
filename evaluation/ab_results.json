@@ -1,0 +1,69 @@
+{
+  "means": {
+    "system_a_mean": 4.9,
+    "system_b_mean": 4.5,
+    "system_c_mean": 4.434
+  },
+  "rows": [
+    {
+      "query": "Hi, my UPI transfer failed but the money is debited from my account. Please help me with the refund process.",
+      "system_a_score": 5.0,
+      "system_b_score": 4.667,
+      "system_c_score": 3.667
+    },
+    {
+      "query": "My refund is pending for the last 15 days. Can you please expedite the process?",
+      "system_a_score": 5.0,
+      "system_b_score": 4.667,
+      "system_c_score": 4.667
+    },
+    {
+      "query": "My cashback for the month of March is still pending. Can you please look into this and provide an update?",
+      "system_a_score": 5.0,
+      "system_b_score": 4.667,
+      "system_c_score": 5.0
+    },
+    {
+      "query": "Can I get a copy of my loan repayment schedule sent to my email?",
+      "system_a_score": 4.667,
+      "system_b_score": 5.0,
+      "system_c_score": 3.667
+    },
+    {
+      "query": "How do I download my invoice for the current month?",
+      "system_a_score": 4.667,
+      "system_b_score": 4.0,
+      "system_c_score": 5.0
+    },
+    {
+      "query": "I haven't received my cashback for a recent transaction. Can someone look into this and help me?",
+      "system_a_score": 5.0,
+      "system_b_score": 5.0,
+      "system_c_score": 5.0
+    },
+    {
+      "query": "Can you please help me with a refund for a duplicate payment I made using NovaPay?",
+      "system_a_score": 5.0,
+      "system_b_score": 4.667,
+      "system_c_score": 5.0
+    },
+    {
+      "query": "I request a refund for my last transaction as it was not completed successfully.",
+      "system_a_score": 5.0,
+      "system_b_score": 5.0,
+      "system_c_score": 5.0
+    },
+    {
+      "query": "I made a wrong transaction and the amount is debited from my account. Can I get a refund?",
+      "system_a_score": 4.667,
+      "system_b_score": 3.667,
+      "system_c_score": 3.667
+    },
+    {
+      "query": "My loan repayment schedule is not clear can you provide more information?",
+      "system_a_score": 5.0,
+      "system_b_score": 3.667,
+      "system_c_score": 3.667
+    }
+  ]
+}

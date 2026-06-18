@@ -1,0 +1,74 @@
+{
+  "stats": {
+    "mean_ms": 35783.6,
+    "median_ms": 33198.4,
+    "p95_ms": 60183.3,
+    "p99_ms": 60183.3
+  },
+  "rows": [
+    {
+      "query": "My UPI payment failed but money was debi",
+      "triage_latency_ms": 1018.5,
+      "retrieval_latency_ms": 28979.3,
+      "agent_llm_latency_ms": 993.1,
+      "hallucination_check_latency_ms": 1120.2,
+      "total_latency_ms": 32111.1
+    },
+    {
+      "query": "I was charged twice for one payment",
+      "triage_latency_ms": 719.0,
+      "retrieval_latency_ms": 29.1,
+      "agent_llm_latency_ms": 679.3,
+      "hallucination_check_latency_ms": 17027.3,
+      "total_latency_ms": 18454.6
+    },
+    {
+      "query": "I'm not getting the OTP",
+      "triage_latency_ms": 277.6,
+      "retrieval_latency_ms": 37.0,
+      "agent_llm_latency_ms": 16536.7,
+      "hallucination_check_latency_ms": 15818.0,
+      "total_latency_ms": 32669.3
+    },
+    {
+      "query": "Fingerprint login stopped working",
+      "triage_latency_ms": 1394.9,
+      "retrieval_latency_ms": 78.4,
+      "agent_llm_latency_ms": 16579.2,
+      "hallucination_check_latency_ms": 22802.5,
+      "total_latency_ms": 40855.0
+    },
+    {
+      "query": "EMI deducted twice this month",
+      "triage_latency_ms": 183.2,
+      "retrieval_latency_ms": 33.1,
+      "agent_llm_latency_ms": 17137.8,
+      "hallucination_check_latency_ms": 18340.1,
+      "total_latency_ms": 35694.2
+    },
+    {
+      "query": "Why am I charged 199 for Plus?",
+      "triage_latency_ms": 163.8,
+      "retrieval_latency_ms": 50.6,
+      "agent_llm_latency_ms": 43024.7,
+      "hallucination_check_latency_ms": 16944.2,
+      "total_latency_ms": 60183.3
+    },
+    {
+      "query": "",
+      "triage_latency_ms": 0.2,
+      "retrieval_latency_ms": 0.0,
+      "agent_llm_latency_ms": 15726.1,
+      "hallucination_check_latency_ms": 16847.1,
+      "total_latency_ms": 32573.5
+    },
+    {
+      "query": "I need to transfer 100000 INR refund urg",
+      "triage_latency_ms": 255.4,
+      "retrieval_latency_ms": 32.0,
+      "agent_llm_latency_ms": 16324.2,
+      "hallucination_check_latency_ms": 17115.9,
+      "total_latency_ms": 33727.6
+    }
+  ]
+}

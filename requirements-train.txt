@@ -1,0 +1,10 @@
+# GPU-only training stack — install on Colab T4 / Kaggle P100.
+# (Kept separate from requirements.txt so the CPU HF Space stays lightweight.)
+unsloth
+torch
+transformers>=4.40.0
+trl>=0.8.0
+peft>=0.10.0
+datasets>=2.19.0
+bert-score>=0.3.13
+scikit-learn>=1.4.0
