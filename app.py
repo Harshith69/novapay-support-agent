@@ -23,412 +23,405 @@ _last_interaction: dict = {}
 CUSTOM_CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-:root {
-    --bg-primary: #050508;
-    --bg-secondary: #0a0a10;
-    --bg-card: rgba(15, 15, 25, 0.7);
-    --bg-glass: rgba(255, 255, 255, 0.03);
-    --border-glass: rgba(255, 255, 255, 0.06);
-    --accent-blue: #3b82f6;
-    --accent-violet: #8b5cf6;
-    --accent-cyan: #06b6d4;
-    --accent-emerald: #10b981;
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #475569;
-    --glow-blue: rgba(59, 130, 246, 0.15);
-    --glow-violet: rgba(139, 92, 246, 0.12);
-}
-
 * { font-family: 'Space Grotesk', 'Inter', sans-serif !important; }
 
+/* ── FULL WIDTH — no side margins ── */
 .gradio-container {
-    max-width: 1060px !important;
-    margin: 0 auto !important;
-    background: var(--bg-primary) !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #06080f !important;
     min-height: 100vh;
 }
+.gradio-container > .main {
+    max-width: 100% !important;
+    padding: 0 24px !important;
+}
 
-/* ── 3D Hero Banner ── */
+/* ── Hero ── */
 .hero-banner {
     position: relative;
-    padding: 48px 44px 40px;
-    margin-bottom: 12px;
-    border-radius: 24px;
-    background: linear-gradient(160deg, #0c0c18 0%, #111128 40%, #0a0a1a 100%);
-    border: 1px solid var(--border-glass);
+    padding: 56px 52px 48px;
+    margin: 0 -24px 16px -24px;
+    background: linear-gradient(160deg, #080c1a 0%, #0f1630 50%, #0a0e1e 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
     overflow: hidden;
 }
 .hero-banner::before {
     content: '';
     position: absolute;
-    top: -100px; right: -60px;
-    width: 350px; height: 350px;
-    background: radial-gradient(circle, var(--glow-blue) 0%, transparent 70%);
+    top: -120px; right: -40px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(59,130,246,0.18) 0%, transparent 65%);
     border-radius: 50%;
-    filter: blur(60px);
+    filter: blur(80px);
     pointer-events: none;
 }
 .hero-banner::after {
     content: '';
     position: absolute;
-    bottom: -80px; left: 30%;
-    width: 280px; height: 280px;
-    background: radial-gradient(circle, var(--glow-violet) 0%, transparent 70%);
+    bottom: -100px; left: 25%;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 65%);
     border-radius: 50%;
-    filter: blur(50px);
+    filter: blur(70px);
     pointer-events: none;
 }
 .hero-banner h1 {
-    color: #fff !important;
-    font-size: 2.8em !important;
+    color: #ffffff !important;
+    font-size: 3.6em !important;
     font-weight: 700 !important;
-    margin: 0 0 4px 0 !important;
-    letter-spacing: -1.5px;
-    line-height: 1.1 !important;
+    margin: 0 0 6px 0 !important;
+    letter-spacing: -2px;
+    line-height: 1.05 !important;
     text-transform: uppercase;
+    position: relative;
+    z-index: 1;
 }
-.hero-banner .hero-accent {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+.hero-accent {
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #818cf8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
-.hero-banner p {
-    color: var(--text-secondary) !important;
-    font-size: 0.95em !important;
-    margin: 0 !important;
+.hero-banner .hero-sub {
+    color: #b0bec5 !important;
+    font-size: 1.15em !important;
+    margin: 12px 0 0 0 !important;
     line-height: 1.7;
-    max-width: 580px;
+    max-width: 650px;
     font-weight: 400;
+    position: relative;
+    z-index: 1;
+}
+.hero-banner .hero-contact {
+    color: #7e8fa6 !important;
+    font-size: 0.95em !important;
+    margin: 14px 0 0 0 !important;
+    position: relative;
+    z-index: 1;
 }
 .hero-banner a {
-    color: var(--accent-blue) !important;
+    color: #60a5fa !important;
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s;
 }
-.hero-banner a:hover { color: var(--accent-cyan) !important; }
+.hero-banner a:hover { color: #93c5fd !important; }
 
-/* ── 3D Floating pills ── */
+/* ── Tech pills ── */
 .tech-pills {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    margin-top: 20px;
+    margin-top: 22px;
     position: relative;
     z-index: 1;
 }
 .tech-pills span {
-    background: var(--bg-glass);
-    color: var(--text-secondary);
-    padding: 6px 16px;
+    background: rgba(255,255,255,0.05);
+    color: #94a3b8;
+    padding: 8px 20px;
     border-radius: 100px;
-    font-size: 0.78em;
+    font-size: 0.88em;
     font-weight: 500;
-    border: 1px solid var(--border-glass);
+    border: 1px solid rgba(255,255,255,0.08);
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
     letter-spacing: 0.3px;
 }
 .tech-pills span:hover {
-    background: rgba(59, 130, 246, 0.08);
-    border-color: rgba(59, 130, 246, 0.2);
-    color: var(--accent-blue);
+    background: rgba(59,130,246,0.1);
+    border-color: rgba(59,130,246,0.25);
+    color: #60a5fa;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.1);
+    box-shadow: 0 8px 24px rgba(59,130,246,0.12);
 }
 
-/* ── 3D Stat cards (hero row) ── */
+/* ── Stat cards row ── */
 .stat-row {
     display: flex;
-    gap: 12px;
-    margin-top: 24px;
+    gap: 16px;
+    margin-top: 28px;
     position: relative;
     z-index: 1;
 }
 .stat-card {
     flex: 1;
-    background: var(--bg-glass);
-    border: 1px solid var(--border-glass);
-    border-radius: 16px;
-    padding: 16px 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 18px;
+    padding: 20px 24px;
     backdrop-filter: blur(12px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s ease;
 }
 .stat-card:hover {
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-    border-color: rgba(59, 130, 246, 0.15);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    border-color: rgba(59,130,246,0.2);
+    background: rgba(255,255,255,0.06);
 }
 .stat-card .stat-value {
-    font-size: 1.5em;
+    font-size: 2.2em;
     font-weight: 700;
-    color: #fff;
-    letter-spacing: -0.5px;
+    color: #ffffff;
+    letter-spacing: -1px;
+    line-height: 1;
+}
+.stat-card .stat-value .stat-unit {
+    font-size: 0.4em;
+    color: #4a5568;
+    font-weight: 500;
 }
 .stat-card .stat-label {
-    font-size: 0.72em;
-    color: var(--text-muted);
+    font-size: 0.78em;
+    color: #5a6a80;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 2px;
+    letter-spacing: 1.5px;
+    margin-top: 6px;
+    font-weight: 600;
 }
 
 /* ── Tab styling ── */
 .tab-nav button {
     font-weight: 600 !important;
-    font-size: 0.88em !important;
-    padding: 12px 28px !important;
+    font-size: 1em !important;
+    padding: 14px 32px !important;
     border-radius: 12px 12px 0 0 !important;
     transition: all 0.3s ease !important;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
-    color: var(--text-muted) !important;
+    color: #5a6a80 !important;
     background: transparent !important;
     border: 1px solid transparent !important;
     border-bottom: none !important;
 }
 .tab-nav button.selected {
-    background: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-    border-color: var(--border-glass) !important;
+    background: rgba(15,20,40,0.8) !important;
+    color: #e2e8f0 !important;
+    border-color: rgba(255,255,255,0.06) !important;
     border-bottom: none !important;
 }
 
-/* ── Glassmorphism Input ── */
+/* ── Input area — large, readable ── */
 .query-input textarea {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-glass) !important;
+    background: rgba(12,16,30,0.9) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
     border-radius: 16px !important;
-    color: var(--text-primary) !important;
-    font-size: 0.95em !important;
-    padding: 18px 20px !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    backdrop-filter: blur(8px);
+    color: #e2e8f0 !important;
+    font-size: 1.1em !important;
+    padding: 20px 24px !important;
+    line-height: 1.6 !important;
+    transition: all 0.3s ease !important;
 }
 .query-input textarea:focus {
-    border-color: var(--accent-blue) !important;
-    box-shadow: 0 0 0 3px var(--glow-blue), 0 8px 32px rgba(0,0,0,0.3) !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15), 0 8px 32px rgba(0,0,0,0.3) !important;
 }
 .query-input label span {
-    font-size: 0.75em !important;
+    font-size: 0.85em !important;
     font-weight: 600 !important;
-    color: var(--text-muted) !important;
+    color: #5a6a80 !important;
     text-transform: uppercase;
     letter-spacing: 1.5px;
 }
 
-/* ── 3D Submit button ── */
+/* ── Submit button — bold ── */
 .submit-btn button {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet)) !important;
+    background: linear-gradient(135deg, #3b82f6, #7c3aed) !important;
     border: none !important;
     border-radius: 14px !important;
-    padding: 16px 40px !important;
+    padding: 18px 48px !important;
     font-weight: 700 !important;
-    font-size: 0.92em !important;
-    letter-spacing: 1px;
+    font-size: 1.05em !important;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     color: #fff !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25),
-                0 0 40px rgba(139, 92, 246, 0.08) !important;
-    position: relative;
-    overflow: hidden;
-}
-.submit-btn button::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 6px 24px rgba(59,130,246,0.3),
+                0 0 50px rgba(124,58,237,0.08) !important;
 }
 .submit-btn button:hover {
     transform: translateY(-3px) scale(1.02) !important;
-    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.35),
-                0 0 60px rgba(139, 92, 246, 0.12) !important;
+    box-shadow: 0 10px 36px rgba(59,130,246,0.4),
+                0 0 70px rgba(124,58,237,0.12) !important;
 }
-.submit-btn button:hover::after { transform: translateX(100%); }
 
-/* ── Triage badges — glass card ── */
+/* ── Triage badges ── */
 .triage-badges {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-glass);
+    background: rgba(12,16,30,0.9) !important;
+    border: 1px solid rgba(255,255,255,0.07);
     border-radius: 16px;
-    padding: 18px 24px;
-    margin: 10px 0;
-    backdrop-filter: blur(12px);
+    padding: 20px 28px;
+    margin: 12px 0;
 }
-.triage-badges p { margin: 0 !important; color: var(--text-secondary) !important; }
-.triage-badges strong { color: var(--text-primary) !important; }
+.triage-badges p {
+    margin: 0 !important;
+    color: #b0bec5 !important;
+    font-size: 1.05em !important;
+    line-height: 1.8 !important;
+}
+.triage-badges strong { color: #e2e8f0 !important; }
 .triage-badges code {
-    background: rgba(59, 130, 246, 0.08) !important;
-    color: var(--accent-blue) !important;
-    padding: 2px 8px;
+    background: rgba(59,130,246,0.1) !important;
+    color: #60a5fa !important;
+    padding: 3px 10px;
     border-radius: 6px;
-    font-size: 0.88em;
-    border: 1px solid rgba(59, 130, 246, 0.12);
+    font-size: 0.92em;
+    border: 1px solid rgba(59,130,246,0.15);
 }
 
-/* ── Response card — depth effect ── */
+/* ── Response card ── */
 .response-card {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-glass) !important;
+    background: rgba(12,16,30,0.9) !important;
+    border: 1px solid rgba(255,255,255,0.07) !important;
     border-radius: 16px !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25) !important;
 }
 .response-card textarea {
     background: transparent !important;
-    color: var(--text-primary) !important;
+    color: #d4dae4 !important;
     border: none !important;
-    font-size: 0.93em !important;
-    line-height: 1.8 !important;
+    font-size: 1.05em !important;
+    line-height: 1.85 !important;
     font-family: 'Inter', sans-serif !important;
 }
 .response-card label span {
-    color: var(--accent-blue) !important;
+    color: #3b82f6 !important;
     font-weight: 700 !important;
-    font-size: 0.75em !important;
+    font-size: 0.85em !important;
     text-transform: uppercase;
     letter-spacing: 1.5px;
 }
 
-/* ── Status cards ── */
+/* ── Escalation status ── */
 .status-escalated {
-    background: var(--bg-card) !important;
+    background: rgba(12,16,30,0.9) !important;
     border-radius: 14px;
-    padding: 14px 20px;
-    margin: 6px 0;
-    border: 1px solid var(--border-glass);
+    padding: 16px 24px;
+    margin: 8px 0;
+    border: 1px solid rgba(255,255,255,0.06);
+    font-size: 1.02em !important;
 }
 
-/* ── Accordion — depth ── */
+/* ── Accordion ── */
 .gradio-accordion {
-    border: 1px solid var(--border-glass) !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
     border-radius: 14px !important;
     overflow: hidden;
     margin: 6px 0 !important;
-    background: var(--bg-card) !important;
+    background: rgba(12,16,30,0.8) !important;
 }
 .gradio-accordion .label-wrap {
     background: transparent !important;
-    padding: 12px 18px !important;
+    padding: 14px 20px !important;
 }
 .gradio-accordion .label-wrap span {
-    color: var(--text-muted) !important;
-    font-weight: 500 !important;
-    font-size: 0.82em !important;
+    color: #5a6a80 !important;
+    font-weight: 600 !important;
+    font-size: 0.9em !important;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
 }
 
-/* ── Feedback — floating buttons ── */
+/* ── Feedback buttons ── */
 .feedback-btn button {
     border-radius: 12px !important;
-    padding: 10px 28px !important;
+    padding: 12px 32px !important;
     font-weight: 600 !important;
-    font-size: 0.85em !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    border: 1px solid var(--border-glass) !important;
-    background: var(--bg-card) !important;
-    color: var(--text-secondary) !important;
+    font-size: 0.95em !important;
+    transition: all 0.3s ease !important;
+    border: 1px solid rgba(255,255,255,0.07) !important;
+    background: rgba(12,16,30,0.9) !important;
+    color: #94a3b8 !important;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 .feedback-btn button:hover {
     transform: translateY(-2px) !important;
-    border-color: var(--accent-blue) !important;
-    color: var(--accent-blue) !important;
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.12) !important;
+    border-color: #3b82f6 !important;
+    color: #60a5fa !important;
+    box-shadow: 0 8px 24px rgba(59,130,246,0.15) !important;
 }
 
-/* ── Dashboard — 3D floating cards ── */
+/* ── Dashboard ── */
 .dash-card {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-glass);
+    background: rgba(12,16,30,0.9) !important;
+    border: 1px solid rgba(255,255,255,0.06);
     border-radius: 20px;
-    padding: 28px 32px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    padding: 32px 36px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
 }
 .dash-card h2 {
-    color: var(--text-primary) !important;
+    color: #e2e8f0 !important;
+    font-size: 1.4em !important;
     font-weight: 700 !important;
     letter-spacing: -0.5px;
 }
-.dash-card table {
-    border-collapse: separate !important;
-    border-spacing: 0 !important;
-    width: 100%;
-}
+.dash-card table { width: 100%; }
 .dash-card th {
-    background: rgba(59, 130, 246, 0.06) !important;
-    color: var(--text-muted) !important;
+    background: rgba(59,130,246,0.06) !important;
+    color: #5a6a80 !important;
     font-weight: 600 !important;
-    font-size: 0.75em !important;
+    font-size: 0.85em !important;
     text-transform: uppercase;
     letter-spacing: 1px;
-    padding: 10px 14px !important;
+    padding: 12px 16px !important;
     border: none !important;
 }
 .dash-card td {
-    color: var(--text-secondary) !important;
-    padding: 10px 14px !important;
-    border-bottom: 1px solid var(--border-glass) !important;
+    color: #b0bec5 !important;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+    font-size: 1em !important;
 }
-.dash-card strong {
-    color: var(--text-primary) !important;
-}
+.dash-card strong { color: #e2e8f0 !important; }
 
 .dash-refresh button {
-    background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet)) !important;
+    background: linear-gradient(135deg, #3b82f6, #7c3aed) !important;
     border: none !important;
     border-radius: 12px !important;
     font-weight: 700 !important;
+    font-size: 0.95em !important;
     color: #fff !important;
     text-transform: uppercase;
     letter-spacing: 1px;
-    font-size: 0.85em !important;
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25) !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 20px rgba(59,130,246,0.25) !important;
+    transition: all 0.3s ease !important;
 }
 .dash-refresh button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.35) !important;
+    box-shadow: 0 8px 32px rgba(59,130,246,0.35) !important;
 }
 
-/* ── Data table — depth ── */
-.dash-table table {
-    border-radius: 14px !important;
-    overflow: hidden;
-}
+/* ── Data table ── */
+.dash-table table { border-radius: 14px !important; overflow: hidden; }
 .dash-table th {
-    background: rgba(59, 130, 246, 0.06) !important;
-    color: var(--text-muted) !important;
+    background: rgba(59,130,246,0.06) !important;
+    color: #5a6a80 !important;
     font-weight: 600 !important;
-    font-size: 0.78em !important;
+    font-size: 0.85em !important;
     text-transform: uppercase;
     letter-spacing: 0.8px;
 }
 .dash-table td {
-    background: var(--bg-card) !important;
-    color: var(--text-secondary) !important;
-    border-color: var(--border-glass) !important;
+    background: rgba(12,16,30,0.8) !important;
+    color: #b0bec5 !important;
+    border-color: rgba(255,255,255,0.04) !important;
+    font-size: 1em !important;
 }
 
-/* ── Footer — minimal ── */
+/* ── Footer ── */
 .footer-section {
     text-align: center;
-    padding: 24px;
-    margin-top: 16px;
+    padding: 28px;
+    margin-top: 20px;
 }
 .footer-section p {
-    color: var(--text-muted) !important;
-    font-size: 0.72em !important;
+    color: #3a4560 !important;
+    font-size: 0.8em !important;
     margin: 0 !important;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     text-transform: uppercase;
 }
 
@@ -437,26 +430,25 @@ CUSTOM_CSS = """
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-.gradio-container > .main > .wrap { animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
-
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-}
+.gradio-container > .main > .wrap { animation: fadeUp 0.6s ease; }
 
 @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
 }
 .processing {
-    background: linear-gradient(90deg, var(--bg-card), rgba(59,130,246,0.05), var(--bg-card));
+    background: linear-gradient(90deg, rgba(12,16,30,0.9), rgba(59,130,246,0.06), rgba(12,16,30,0.9));
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
 }
 
-/* ── Global overrides for dark theme consistency ── */
-.gradio-container .prose { color: var(--text-secondary) !important; }
-.gradio-container .block { border-color: var(--border-glass) !important; }
+/* ── Global overrides ── */
+.gradio-container .prose { color: #b0bec5 !important; font-size: 1.02em !important; }
+.gradio-container .block { border-color: rgba(255,255,255,0.05) !important; }
+.gradio-container .label-wrap { font-size: 1em !important; }
+.gradio-container .markdown p { font-size: 1.02em !important; }
+.gradio-container .markdown table { font-size: 1em !important; }
+.gradio-container .markdown td, .gradio-container .markdown th { padding: 10px 14px !important; }
 """
 
 
@@ -488,9 +480,9 @@ def process_query(query: str):
     urg_color = {"high": "\U0001f534", "medium": "\U0001f7e1", "low": "\U0001f7e2"}.get(urgency, "⚪")
 
     badges = (
-        f"{cat_emoji} **Category:** `{category}`   "
-        f"{urg_color} **Urgency:** `{urgency}`   "
-        f"\U0001f3af **Sentiment:** `{sentiment}`   "
+        f"{cat_emoji} **Category:** `{category}`   "
+        f"{urg_color} **Urgency:** `{urgency}`   "
+        f"\U0001f3af **Sentiment:** `{sentiment}`   "
         f"\U0001f4ca **Confidence:** `{confidence}`"
     )
 
@@ -579,15 +571,15 @@ def build_app() -> gr.Blocks:
         css=CUSTOM_CSS,
     ) as demo:
 
-        # ── Hero banner — 3D inspired ──
+        # ── Hero banner ──
         gr.HTML("""
         <div class="hero-banner">
             <h1>NOVAPAY<br><span class="hero-accent">INTELLIGENT SUPPORT.</span></h1>
-            <p>
+            <p class="hero-sub">
                 Multi-agent AI system with intelligent routing,
                 policy-grounded responses, and real-time safety guardrails.
             </p>
-            <p style="margin-top: 12px !important; font-size: 0.82em !important;">
+            <p class="hero-contact">
                 Built by <a href="https://www.linkedin.com/in/harshithnarasimhamurthy69/" target="_blank">Harshith Narasimhamurthy</a>
                 &nbsp;&bull;&nbsp; harshithnchandan@gmail.com &nbsp;&bull;&nbsp; +91-9663918804
             </p>
@@ -601,11 +593,11 @@ def build_app() -> gr.Blocks:
             </div>
             <div class="stat-row">
                 <div class="stat-card">
-                    <div class="stat-value">4.9<span style="font-size:0.5em;color:#64748b">/5.0</span></div>
+                    <div class="stat-value">4.9<span class="stat-unit">/5.0</span></div>
                     <div class="stat-label">Judge Score</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">15<span style="font-size:0.5em;color:#64748b">/15</span></div>
+                    <div class="stat-value">15<span class="stat-unit">/15</span></div>
                     <div class="stat-label">Adversarial Safe</div>
                 </div>
                 <div class="stat-card">
@@ -623,8 +615,8 @@ def build_app() -> gr.Blocks:
         # ── Tab 1: Customer Support ──
         with gr.Tab("Customer Support", id="support"):
             gr.HTML("""
-            <div style="padding: 10px 0 6px 0;">
-                <p style="color: #475569; font-size: 0.82em; margin: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 500;">
+            <div style="padding: 12px 0 8px 0;">
+                <p style="color: #5a6a80; font-size: 0.95em; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500;">
                     Describe your banking issue &mdash; the system classifies, retrieves policy, and generates a grounded response.
                 </p>
             </div>
@@ -691,8 +683,8 @@ def build_app() -> gr.Blocks:
         # ── Tab 2: Operations Dashboard ──
         with gr.Tab("Operations Dashboard", id="dashboard"):
             gr.HTML("""
-            <div style="padding: 10px 0 6px 0;">
-                <p style="color: #475569; font-size: 0.82em; margin: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 500;">
+            <div style="padding: 12px 0 8px 0;">
+                <p style="color: #5a6a80; font-size: 0.95em; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500;">
                     Real-time operational metrics &mdash; volume, latency, escalation rates, cost per ticket, and ROI.
                 </p>
             </div>
