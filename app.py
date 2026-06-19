@@ -21,265 +21,442 @@ _orchestrator = None
 _last_interaction: dict = {}
 
 CUSTOM_CSS = """
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-* { font-family: 'Inter', sans-serif !important; }
+:root {
+    --bg-primary: #050508;
+    --bg-secondary: #0a0a10;
+    --bg-card: rgba(15, 15, 25, 0.7);
+    --bg-glass: rgba(255, 255, 255, 0.03);
+    --border-glass: rgba(255, 255, 255, 0.06);
+    --accent-blue: #3b82f6;
+    --accent-violet: #8b5cf6;
+    --accent-cyan: #06b6d4;
+    --accent-emerald: #10b981;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #475569;
+    --glow-blue: rgba(59, 130, 246, 0.15);
+    --glow-violet: rgba(139, 92, 246, 0.12);
+}
+
+* { font-family: 'Space Grotesk', 'Inter', sans-serif !important; }
 
 .gradio-container {
-    max-width: 960px !important;
+    max-width: 1060px !important;
     margin: 0 auto !important;
-    background: linear-gradient(135deg, #0a0e1a 0%, #111827 50%, #0f172a 100%) !important;
+    background: var(--bg-primary) !important;
     min-height: 100vh;
 }
 
-/* ── Hero header ── */
+/* ── 3D Hero Banner ── */
 .hero-banner {
-    background: linear-gradient(135deg, #1e3a5f 0%, #0ea5e9 50%, #6366f1 100%);
-    border-radius: 16px;
-    padding: 32px 36px;
-    margin-bottom: 8px;
     position: relative;
+    padding: 48px 44px 40px;
+    margin-bottom: 12px;
+    border-radius: 24px;
+    background: linear-gradient(160deg, #0c0c18 0%, #111128 40%, #0a0a1a 100%);
+    border: 1px solid var(--border-glass);
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(14, 165, 233, 0.15);
 }
 .hero-banner::before {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    top: -100px; right: -60px;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, var(--glow-blue) 0%, transparent 70%);
     border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+}
+.hero-banner::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 30%;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, var(--glow-violet) 0%, transparent 70%);
+    border-radius: 50%;
+    filter: blur(50px);
+    pointer-events: none;
 }
 .hero-banner h1 {
     color: #fff !important;
-    font-size: 2em !important;
-    font-weight: 800 !important;
-    margin: 0 0 6px 0 !important;
-    letter-spacing: -0.5px;
+    font-size: 2.8em !important;
+    font-weight: 700 !important;
+    margin: 0 0 4px 0 !important;
+    letter-spacing: -1.5px;
+    line-height: 1.1 !important;
+    text-transform: uppercase;
+}
+.hero-banner .hero-accent {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 .hero-banner p {
-    color: rgba(255,255,255,0.85) !important;
-    font-size: 0.92em !important;
+    color: var(--text-secondary) !important;
+    font-size: 0.95em !important;
     margin: 0 !important;
-    line-height: 1.6;
+    line-height: 1.7;
+    max-width: 580px;
+    font-weight: 400;
 }
-.hero-banner a { color: #93c5fd !important; text-decoration: none; font-weight: 600; }
-.hero-banner a:hover { color: #fff !important; text-decoration: underline; }
+.hero-banner a {
+    color: var(--accent-blue) !important;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+.hero-banner a:hover { color: var(--accent-cyan) !important; }
 
-/* ── Pill badges row ── */
+/* ── 3D Floating pills ── */
 .tech-pills {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
-    margin-top: 14px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
 }
 .tech-pills span {
-    background: rgba(255,255,255,0.15);
-    color: #e0f2fe;
-    padding: 4px 14px;
-    border-radius: 20px;
+    background: var(--bg-glass);
+    color: var(--text-secondary);
+    padding: 6px 16px;
+    border-radius: 100px;
     font-size: 0.78em;
     font-weight: 500;
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid var(--border-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.3px;
+}
+.tech-pills span:hover {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.2);
+    color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.1);
+}
+
+/* ── 3D Stat cards (hero row) ── */
+.stat-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    position: relative;
+    z-index: 1;
+}
+.stat-card {
+    flex: 1;
+    background: var(--bg-glass);
+    border: 1px solid var(--border-glass);
+    border-radius: 16px;
+    padding: 16px 20px;
+    backdrop-filter: blur(12px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stat-card:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    border-color: rgba(59, 130, 246, 0.15);
+}
+.stat-card .stat-value {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.5px;
+}
+.stat-card .stat-label {
+    font-size: 0.72em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
 }
 
 /* ── Tab styling ── */
 .tab-nav button {
     font-weight: 600 !important;
-    font-size: 0.95em !important;
-    padding: 12px 24px !important;
-    border-radius: 10px 10px 0 0 !important;
+    font-size: 0.88em !important;
+    padding: 12px 28px !important;
+    border-radius: 12px 12px 0 0 !important;
     transition: all 0.3s ease !important;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    color: var(--text-muted) !important;
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    border-bottom: none !important;
 }
 .tab-nav button.selected {
-    background: linear-gradient(135deg, #0ea5e9, #6366f1) !important;
-    color: #fff !important;
-    border: none !important;
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-glass) !important;
+    border-bottom: none !important;
 }
 
-/* ── Input area ── */
+/* ── Glassmorphism Input ── */
 .query-input textarea {
-    background: #1e293b !important;
-    border: 2px solid #334155 !important;
-    border-radius: 12px !important;
-    color: #e2e8f0 !important;
-    font-size: 1em !important;
-    padding: 16px !important;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease !important;
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-glass) !important;
+    border-radius: 16px !important;
+    color: var(--text-primary) !important;
+    font-size: 0.95em !important;
+    padding: 18px 20px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    backdrop-filter: blur(8px);
 }
 .query-input textarea:focus {
-    border-color: #0ea5e9 !important;
-    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2) !important;
+    border-color: var(--accent-blue) !important;
+    box-shadow: 0 0 0 3px var(--glow-blue), 0 8px 32px rgba(0,0,0,0.3) !important;
 }
 .query-input label span {
-    font-size: 0.92em !important;
+    font-size: 0.75em !important;
     font-weight: 600 !important;
-    color: #94a3b8 !important;
+    color: var(--text-muted) !important;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* ── 3D Submit button ── */
+.submit-btn button {
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet)) !important;
+    border: none !important;
+    border-radius: 14px !important;
+    padding: 16px 40px !important;
+    font-weight: 700 !important;
+    font-size: 0.92em !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25),
+                0 0 40px rgba(139, 92, 246, 0.08) !important;
+    position: relative;
+    overflow: hidden;
+}
+.submit-btn button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+.submit-btn button:hover {
+    transform: translateY(-3px) scale(1.02) !important;
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.35),
+                0 0 60px rgba(139, 92, 246, 0.12) !important;
+}
+.submit-btn button:hover::after { transform: translateX(100%); }
+
+/* ── Triage badges — glass card ── */
+.triage-badges {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-glass);
+    border-radius: 16px;
+    padding: 18px 24px;
+    margin: 10px 0;
+    backdrop-filter: blur(12px);
+}
+.triage-badges p { margin: 0 !important; color: var(--text-secondary) !important; }
+.triage-badges strong { color: var(--text-primary) !important; }
+.triage-badges code {
+    background: rgba(59, 130, 246, 0.08) !important;
+    color: var(--accent-blue) !important;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.88em;
+    border: 1px solid rgba(59, 130, 246, 0.12);
+}
+
+/* ── Response card — depth effect ── */
+.response-card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-glass) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+}
+.response-card textarea {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    border: none !important;
+    font-size: 0.93em !important;
+    line-height: 1.8 !important;
+    font-family: 'Inter', sans-serif !important;
+}
+.response-card label span {
+    color: var(--accent-blue) !important;
+    font-weight: 700 !important;
+    font-size: 0.75em !important;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* ── Status cards ── */
+.status-escalated {
+    background: var(--bg-card) !important;
+    border-radius: 14px;
+    padding: 14px 20px;
+    margin: 6px 0;
+    border: 1px solid var(--border-glass);
+}
+
+/* ── Accordion — depth ── */
+.gradio-accordion {
+    border: 1px solid var(--border-glass) !important;
+    border-radius: 14px !important;
+    overflow: hidden;
+    margin: 6px 0 !important;
+    background: var(--bg-card) !important;
+}
+.gradio-accordion .label-wrap {
+    background: transparent !important;
+    padding: 12px 18px !important;
+}
+.gradio-accordion .label-wrap span {
+    color: var(--text-muted) !important;
+    font-weight: 500 !important;
+    font-size: 0.82em !important;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* ── Feedback — floating buttons ── */
+.feedback-btn button {
+    border-radius: 12px !important;
+    padding: 10px 28px !important;
+    font-weight: 600 !important;
+    font-size: 0.85em !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    border: 1px solid var(--border-glass) !important;
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
-
-/* ── Submit button ── */
-.submit-btn button {
-    background: linear-gradient(135deg, #0ea5e9, #6366f1) !important;
-    border: none !important;
-    border-radius: 12px !important;
-    padding: 14px 32px !important;
-    font-weight: 700 !important;
-    font-size: 1em !important;
-    letter-spacing: 0.3px;
-    color: #fff !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3) !important;
-}
-.submit-btn button:hover {
+.feedback-btn button:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 30px rgba(14, 165, 233, 0.4) !important;
+    border-color: var(--accent-blue) !important;
+    color: var(--accent-blue) !important;
+    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.12) !important;
 }
 
-/* ── Classification badges ── */
-.triage-badges {
-    background: linear-gradient(135deg, #1e293b, #0f172a) !important;
-    border: 1px solid #334155;
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin: 8px 0;
+/* ── Dashboard — 3D floating cards ── */
+.dash-card {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-glass);
+    border-radius: 20px;
+    padding: 28px 32px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
 }
-.triage-badges p { margin: 0 !important; }
-
-/* ── Response card ── */
-.response-card {
-    background: #1e293b !important;
-    border: 1px solid #334155 !important;
-    border-radius: 12px !important;
-}
-.response-card textarea {
-    background: #1e293b !important;
-    color: #e2e8f0 !important;
-    border: none !important;
-    font-size: 0.95em !important;
-    line-height: 1.7 !important;
-}
-.response-card label span {
-    color: #0ea5e9 !important;
+.dash-card h2 {
+    color: var(--text-primary) !important;
     font-weight: 700 !important;
-    font-size: 0.85em !important;
+    letter-spacing: -0.5px;
+}
+.dash-card table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100%;
+}
+.dash-card th {
+    background: rgba(59, 130, 246, 0.06) !important;
+    color: var(--text-muted) !important;
+    font-weight: 600 !important;
+    font-size: 0.75em !important;
     text-transform: uppercase;
     letter-spacing: 1px;
+    padding: 10px 14px !important;
+    border: none !important;
 }
-
-/* ── Status cards (escalation) ── */
-.status-escalated {
-    background: linear-gradient(135deg, #1e293b, #0f172a) !important;
-    border-radius: 10px;
-    padding: 12px 16px;
-    margin: 4px 0;
+.dash-card td {
+    color: var(--text-secondary) !important;
+    padding: 10px 14px !important;
+    border-bottom: 1px solid var(--border-glass) !important;
 }
-
-/* ── Accordion styling ── */
-.gradio-accordion {
-    border: 1px solid #1e293b !important;
-    border-radius: 10px !important;
-    overflow: hidden;
-    margin: 4px 0 !important;
+.dash-card strong {
+    color: var(--text-primary) !important;
 }
-.gradio-accordion .label-wrap {
-    background: #1e293b !important;
-    padding: 10px 16px !important;
-}
-.gradio-accordion .label-wrap span {
-    color: #94a3b8 !important;
-    font-weight: 500 !important;
-    font-size: 0.88em !important;
-}
-
-/* ── Feedback buttons ── */
-.feedback-btn button {
-    border-radius: 10px !important;
-    padding: 10px 24px !important;
-    font-weight: 600 !important;
-    font-size: 0.9em !important;
-    transition: all 0.3s ease !important;
-    border: 1px solid #334155 !important;
-    background: #1e293b !important;
-    color: #e2e8f0 !important;
-}
-.feedback-btn button:hover {
-    transform: translateY(-1px) !important;
-    border-color: #0ea5e9 !important;
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2) !important;
-}
-
-/* ── Dashboard cards ── */
-.dash-card {
-    background: linear-gradient(135deg, #1e293b, #0f172a) !important;
-    border: 1px solid #334155;
-    border-radius: 14px;
-    padding: 24px;
-}
-.dash-card h3 { color: #0ea5e9 !important; }
-.dash-card li { color: #cbd5e1 !important; }
-.dash-card strong { color: #e2e8f0 !important; }
 
 .dash-refresh button {
-    background: linear-gradient(135deg, #0ea5e9, #6366f1) !important;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-violet)) !important;
     border: none !important;
-    border-radius: 10px !important;
-    font-weight: 600 !important;
+    border-radius: 12px !important;
+    font-weight: 700 !important;
     color: #fff !important;
-    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3) !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.85em !important;
+    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.25) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.dash-refresh button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.35) !important;
 }
 
-/* ── Data table ── */
+/* ── Data table — depth ── */
 .dash-table table {
-    border-radius: 10px !important;
+    border-radius: 14px !important;
     overflow: hidden;
 }
 .dash-table th {
-    background: #1e3a5f !important;
-    color: #e0f2fe !important;
+    background: rgba(59, 130, 246, 0.06) !important;
+    color: var(--text-muted) !important;
     font-weight: 600 !important;
-    font-size: 0.85em !important;
+    font-size: 0.78em !important;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
 }
 .dash-table td {
-    background: #1e293b !important;
-    color: #cbd5e1 !important;
-    border-color: #334155 !important;
+    background: var(--bg-card) !important;
+    color: var(--text-secondary) !important;
+    border-color: var(--border-glass) !important;
 }
 
-/* ── Footer ── */
+/* ── Footer — minimal ── */
 .footer-section {
     text-align: center;
-    padding: 20px;
-    margin-top: 12px;
+    padding: 24px;
+    margin-top: 16px;
 }
 .footer-section p {
-    color: #475569 !important;
-    font-size: 0.8em !important;
+    color: var(--text-muted) !important;
+    font-size: 0.72em !important;
     margin: 0 !important;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 /* ── Animations ── */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
-.gradio-container > .main > .wrap { animation: fadeIn 0.5s ease-out; }
+.gradio-container > .main > .wrap { animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
 
 @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
 }
 .processing {
-    background: linear-gradient(90deg, #1e293b, #334155, #1e293b);
+    background: linear-gradient(90deg, var(--bg-card), rgba(59,130,246,0.05), var(--bg-card));
     background-size: 200% 100%;
     animation: shimmer 2s infinite;
 }
+
+/* ── Global overrides for dark theme consistency ── */
+.gradio-container .prose { color: var(--text-secondary) !important; }
+.gradio-container .block { border-color: var(--border-glass) !important; }
 """
 
 
@@ -311,9 +488,9 @@ def process_query(query: str):
     urg_color = {"high": "\U0001f534", "medium": "\U0001f7e1", "low": "\U0001f7e2"}.get(urgency, "⚪")
 
     badges = (
-        f"{cat_emoji} **Category:** `{category}`&nbsp;&nbsp;&nbsp;"
-        f"{urg_color} **Urgency:** `{urgency}`&nbsp;&nbsp;&nbsp;"
-        f"\U0001f3af **Sentiment:** `{sentiment}`&nbsp;&nbsp;&nbsp;"
+        f"{cat_emoji} **Category:** `{category}`   "
+        f"{urg_color} **Urgency:** `{urgency}`   "
+        f"\U0001f3af **Sentiment:** `{sentiment}`   "
         f"\U0001f4ca **Confidence:** `{confidence}`"
     )
 
@@ -353,6 +530,9 @@ def process_query(query: str):
         "escalation_required": esc,
         "hallucination_detected": hall.get("is_hallucination", False),
     }
+
+    log_interaction(_last_interaction)
+
     return (response, badges, sources, esc_md, metrics, gr.update(visible=True))
 
 
@@ -391,25 +571,25 @@ def build_app() -> gr.Blocks:
     with gr.Blocks(
         title="NovaPay Multi-Agent Support",
         theme=gr.themes.Base(
-            primary_hue=gr.themes.colors.sky,
-            secondary_hue=gr.themes.colors.indigo,
+            primary_hue=gr.themes.colors.blue,
+            secondary_hue=gr.themes.colors.violet,
             neutral_hue=gr.themes.colors.slate,
-            font=gr.themes.GoogleFont("Inter"),
+            font=gr.themes.GoogleFont("Space Grotesk"),
         ),
         css=CUSTOM_CSS,
     ) as demo:
 
-        # ── Hero banner ──
+        # ── Hero banner — 3D inspired ──
         gr.HTML("""
         <div class="hero-banner">
-            <h1>NovaPay Multi-Agent Support</h1>
+            <h1>NOVAPAY<br><span class="hero-accent">INTELLIGENT SUPPORT.</span></h1>
             <p>
-                AI-powered customer support with intelligent query routing,
+                Multi-agent AI system with intelligent routing,
                 policy-grounded responses, and real-time safety guardrails.
             </p>
-            <p style="margin-top: 10px !important;">
+            <p style="margin-top: 12px !important; font-size: 0.82em !important;">
                 Built by <a href="https://www.linkedin.com/in/harshithnarasimhamurthy69/" target="_blank">Harshith Narasimhamurthy</a>
-                &nbsp;|&nbsp; harshithnchandan@gmail.com &nbsp;|&nbsp; +91-9663918804
+                &nbsp;&bull;&nbsp; harshithnchandan@gmail.com &nbsp;&bull;&nbsp; +91-9663918804
             </p>
             <div class="tech-pills">
                 <span>Multi-Agent Orchestration</span>
@@ -417,7 +597,25 @@ def build_app() -> gr.Blocks:
                 <span>QLoRA Fine-Tuned Triage</span>
                 <span>Llama 3.3 70B</span>
                 <span>Hallucination Detection</span>
-                <span>Groq Free Tier</span>
+                <span>Groq Inference</span>
+            </div>
+            <div class="stat-row">
+                <div class="stat-card">
+                    <div class="stat-value">4.9<span style="font-size:0.5em;color:#64748b">/5.0</span></div>
+                    <div class="stat-label">Judge Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">15<span style="font-size:0.5em;color:#64748b">/15</span></div>
+                    <div class="stat-label">Adversarial Safe</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">0.74</div>
+                    <div class="stat-label">BERTScore F1</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$0</div>
+                    <div class="stat-label">Infra Cost</div>
+                </div>
             </div>
         </div>
         """)
@@ -425,10 +623,9 @@ def build_app() -> gr.Blocks:
         # ── Tab 1: Customer Support ──
         with gr.Tab("Customer Support", id="support"):
             gr.HTML("""
-            <div style="padding: 8px 0 4px 0;">
-                <p style="color: #94a3b8; font-size: 0.88em; margin: 0;">
-                    Describe your banking issue below. The system will classify your query,
-                    retrieve relevant policy documents, and generate a grounded response.
+            <div style="padding: 10px 0 6px 0;">
+                <p style="color: #475569; font-size: 0.82em; margin: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 500;">
+                    Describe your banking issue &mdash; the system classifies, retrieves policy, and generates a grounded response.
                 </p>
             </div>
             """)
@@ -494,10 +691,9 @@ def build_app() -> gr.Blocks:
         # ── Tab 2: Operations Dashboard ──
         with gr.Tab("Operations Dashboard", id="dashboard"):
             gr.HTML("""
-            <div style="padding: 8px 0 4px 0;">
-                <p style="color: #94a3b8; font-size: 0.88em; margin: 0;">
-                    Real-time operational metrics computed from the interaction log.
-                    Tracks volume, latency, escalation rates, cost per ticket, and ROI.
+            <div style="padding: 10px 0 6px 0;">
+                <p style="color: #475569; font-size: 0.82em; margin: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 500;">
+                    Real-time operational metrics &mdash; volume, latency, escalation rates, cost per ticket, and ROI.
                 </p>
             </div>
             """)
@@ -524,10 +720,10 @@ def build_app() -> gr.Blocks:
         gr.HTML("""
         <div class="footer-section">
             <p>
-                NovaPay Multi-Agent Support System &nbsp;|&nbsp;
-                Powered by Llama 3.3 70B via Groq &nbsp;|&nbsp;
-                RAG with ChromaDB + MiniLM &nbsp;|&nbsp;
-                QLoRA Fine-Tuned Gemma 3 4B
+                NovaPay Multi-Agent Support &nbsp;&bull;&nbsp;
+                Llama 3.3 70B via Groq &nbsp;&bull;&nbsp;
+                RAG + ChromaDB &nbsp;&bull;&nbsp;
+                QLoRA Gemma 3 4B
             </p>
         </div>
         """)

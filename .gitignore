@@ -23,3 +23,5 @@ triage_model/
 # OS
 .DS_Store
 Thumbs.db
+NovaPay_Interview_FAQ.docx
+generate_faq_doc.py
