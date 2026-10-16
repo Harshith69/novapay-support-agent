@@ -503,6 +503,19 @@ python integration_test.py              # 5 end-to-end tests (pre-deploy gate)
 
 ---
 
+## Troubleshooting
+
+| Symptom | Cause | Fix |
+|---------|-------|-----|
+| App launches but queries return no response | Missing `GROQ_API_KEY` | Create `.env` from `.env.example` and set your key |
+| `ModuleNotFoundError: No module named 'chromadb'` | Dependencies not installed | Run `pip install -r requirements.txt && pip install -e .` |
+| `LLMError: GROQ_API_KEY is not set` | No API key in environment | Set `GROQ_API_KEY` in `.env` or as an env var |
+| `429 Too Many Requests` / slow responses | Groq free-tier rate limits | Wait a few seconds between queries; paid tier eliminates this |
+| `FileNotFoundError: No knowledge-base files found` | KB directory missing | Ensure `data/knowledge_base/*.txt` files exist |
+| Import errors on startup | Package not installed as editable | Run `pip install -e .` from the project root |
+
+---
+
 ## Key Design Decisions
 
 ### 1. Why separate triage from generation?
