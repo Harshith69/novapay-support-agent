@@ -89,7 +89,8 @@ def _classify_with_gemma(query: str) -> dict | None:
     return parsed if isinstance(parsed, dict) else None
 
 
-def _classify_with_fallback(query: str) -> dict:
+def _classify_with_fallback(query: str) -> tuple[dict, int, int]:
+    """Return (parsed_dict, input_tokens, output_tokens)."""
     result = llm.complete(
         system=FALLBACK_SYSTEM,
         user=query,
@@ -98,7 +99,11 @@ def _classify_with_fallback(query: str) -> dict:
         temperature=0.0,
     )
     parsed = extract_json(result.text)
-    return parsed if isinstance(parsed, dict) else {}
+    return (
+        parsed if isinstance(parsed, dict) else {},
+        result.input_tokens,
+        result.output_tokens,
+    )
 
 
 def triage(query: str) -> dict[str, Any]:
@@ -108,6 +113,8 @@ def triage(query: str) -> dict[str, Any]:
     query = (query or "").strip()
     source = "gemma"
     parsed: dict | None = None
+    triage_in_tok = 0
+    triage_out_tok = 0
 
     if query:
         try:
@@ -120,7 +127,7 @@ def triage(query: str) -> dict[str, Any]:
             source = "fallback"
             log_event("triage_fallbacks.log", query=query, reason="gemma_unavailable_or_unparseable")
             try:
-                parsed = _classify_with_fallback(query)
+                parsed, triage_in_tok, triage_out_tok = _classify_with_fallback(query)
             except LLMError as exc:
                 logger.error("Fallback triage failed: %s", exc)
                 parsed = {}
@@ -130,6 +137,8 @@ def triage(query: str) -> dict[str, Any]:
     latency_ms = (time.perf_counter() - start) * 1000
     result["latency_ms"] = round(latency_ms, 1)
     result["source"] = source
+    result["input_tokens"] = triage_in_tok
+    result["output_tokens"] = triage_out_tok
 
     if latency_ms > settings.triage_latency_budget_ms:
         logger.warning("Triage exceeded budget: %.0fms > %dms", latency_ms, settings.triage_latency_budget_ms)
