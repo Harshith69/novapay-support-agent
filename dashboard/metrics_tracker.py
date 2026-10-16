@@ -18,8 +18,9 @@ import json
 
 logger = get_logger("metrics_tracker")
 
-# Pricing pulled from config so it stays consistent with cost accounting.
-SONNET_IN, SONNET_OUT = settings.price_per_mtok["claude-sonnet-4-6"]
+# Pricing: use the active provider's primary model price, not a hardcoded model.
+_active_price = settings.price_per_mtok.get(settings.primary_model, (0.0, 0.0))
+PRICE_IN, PRICE_OUT = _active_price
 
 
 def log_interaction(interaction: dict[str, Any]) -> None:
@@ -88,7 +89,7 @@ def compute_dashboard_metrics(log_path: str | Path = INTERACTION_LOG_PATH) -> di
         hallucinations += int(r.get("hallucination_detected", False))
 
     avg_latency_ms = total_latency / total
-    total_cost = (total_in / 1e6) * SONNET_IN + (total_out / 1e6) * SONNET_OUT
+    total_cost = (total_in / 1e6) * PRICE_IN + (total_out / 1e6) * PRICE_OUT
 
     # Human time saved: baseline minutes minus actual handling time, summed.
     actual_minutes = sum(r.get("latency_ms", 0) for r in rows) / 1000 / 60
