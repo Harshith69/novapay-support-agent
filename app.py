@@ -455,9 +455,23 @@ CUSTOM_CSS = """
 def _ensure_ready():
     global _orchestrator
     if _orchestrator is None:
-        from rag.build_vectorstore import ensure_built
-        ensure_built()
-        from agents.orchestrator import handle_query
+        try:
+            from rag.build_vectorstore import ensure_built
+            ensure_built()
+        except Exception as exc:
+            logger.error("Failed to build vector store: %s", exc)
+            raise RuntimeError(
+                "Could not initialise the knowledge base. "
+                "Please check that chromadb and sentence-transformers are installed."
+            ) from exc
+        try:
+            from agents.orchestrator import handle_query
+        except Exception as exc:
+            logger.error("Failed to import orchestrator: %s", exc)
+            raise RuntimeError(
+                "Could not load the orchestrator. "
+                "Please check that all dependencies are installed and API keys are set."
+            ) from exc
         _orchestrator = handle_query
     return _orchestrator
 
@@ -467,8 +481,26 @@ def process_query(query: str):
     if not query or not query.strip():
         return ("Please describe your issue.", "", "", "", "", gr.update(visible=False))
 
-    handle_query = _ensure_ready()
-    result = handle_query(query)
+    try:
+        handle_query = _ensure_ready()
+    except RuntimeError as exc:
+        error_msg = (
+            f"⚠️ **System Initialization Error**\n\n{exc}\n\n"
+            "Please ensure all dependencies are installed (`pip install -r requirements.txt`) "
+            "and your API key is configured in `.env`."
+        )
+        return (error_msg, "", "", "", "", gr.update(visible=False))
+
+    try:
+        result = handle_query(query)
+    except Exception as exc:
+        logger.exception("Unexpected error processing query")
+        error_msg = (
+            "⚠️ **Something went wrong**\n\n"
+            "I'm sorry — an unexpected error occurred while processing your query. "
+            "Please try again, or contact support if the issue persists."
+        )
+        return (error_msg, "", "", "", "", gr.update(visible=False))
 
     tri = result.get("triage_result", {})
     category = result.get("agent_used", "?")
@@ -573,17 +605,17 @@ def build_app() -> gr.Blocks:
 
         # ── Hero banner ──
         gr.HTML("""
-        <div class="hero-banner">
-            <h1>NOVAPAY<br><span class="hero-accent">INTELLIGENT SUPPORT.</span></h1>
-            <p class="hero-sub">
+        <div class=\"hero-banner\">
+            <h1>NOVAPAY<br><span class=\"hero-accent\">INTELLIGENT SUPPORT.</span></h1>
+            <p class=\"hero-sub\">
                 Multi-agent AI system with intelligent routing,
                 policy-grounded responses, and real-time safety guardrails.
             </p>
-            <p class="hero-contact">
-                Built by <a href="https://www.linkedin.com/in/harshithnarasimhamurthy69/" target="_blank">Harshith Narasimhamurthy</a>
+            <p class=\"hero-contact\">
+                Built by <a href=\"https://www.linkedin.com/in/harshithnarasimhamurthy69/\" target=\"_blank\">Harshith Narasimhamurthy</a>
                 &nbsp;&bull;&nbsp; harshithnchandan@gmail.com &nbsp;&bull;&nbsp; +91-9663918804
             </p>
-            <div class="tech-pills">
+            <div class=\"tech-pills\">
                 <span>Multi-Agent Orchestration</span>
                 <span>RAG + ChromaDB</span>
                 <span>QLoRA Fine-Tuned Triage</span>
@@ -591,22 +623,22 @@ def build_app() -> gr.Blocks:
                 <span>Hallucination Detection</span>
                 <span>Groq Inference</span>
             </div>
-            <div class="stat-row">
-                <div class="stat-card">
-                    <div class="stat-value">4.9<span class="stat-unit">/5.0</span></div>
-                    <div class="stat-label">Judge Score</div>
+            <div class=\"stat-row\">
+                <div class=\"stat-card\">
+                    <div class=\"stat-value\">4.9<span class=\"stat-unit\">/5.0</span></div>
+                    <div class=\"stat-label\">Judge Score</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">15<span class="stat-unit">/15</span></div>
-                    <div class="stat-label">Adversarial Safe</div>
+                <div class=\"stat-card\">
+                    <div class=\"stat-value\">15<span class=\"stat-unit\">/15</span></div>
+                    <div class=\"stat-label\">Adversarial Safe</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">0.74</div>
-                    <div class="stat-label">BERTScore F1</div>
+                <div class=\"stat-card\">
+                    <div class=\"stat-value\">0.74</div>
+                    <div class=\"stat-label\">BERTScore F1</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">$0</div>
-                    <div class="stat-label">Infra Cost</div>
+                <div class=\"stat-card\">
+                    <div class=\"stat-value\">$0</div>
+                    <div class=\"stat-label\">Infra Cost</div>
                 </div>
             </div>
         </div>
@@ -615,8 +647,8 @@ def build_app() -> gr.Blocks:
         # ── Tab 1: Customer Support ──
         with gr.Tab("Customer Support", id="support"):
             gr.HTML("""
-            <div style="padding: 12px 0 8px 0;">
-                <p style="color: #5a6a80; font-size: 0.95em; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500;">
+            <div style=\"padding: 12px 0 8px 0;\">
+                <p style=\"color: #5a6a80; font-size: 0.95em; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500;\">
                     Describe your banking issue &mdash; the system classifies, retrieves policy, and generates a grounded response.
                 </p>
             </div>
@@ -683,8 +715,8 @@ def build_app() -> gr.Blocks:
         # ── Tab 2: Operations Dashboard ──
         with gr.Tab("Operations Dashboard", id="dashboard"):
             gr.HTML("""
-            <div style="padding: 12px 0 8px 0;">
-                <p style="color: #5a6a80; font-size: 0.95em; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500;">
+            <div style=\"padding: 12px 0 8px 0;\">
+                <p style=\"color: #5a6a80; font-size: 0.95em; margin: 0; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500;\">
                     Real-time operational metrics &mdash; volume, latency, escalation rates, cost per ticket, and ROI.
                 </p>
             </div>
@@ -710,7 +742,7 @@ def build_app() -> gr.Blocks:
 
         # ── Footer ──
         gr.HTML("""
-        <div class="footer-section">
+        <div class=\"footer-section\">
             <p>
                 NovaPay Multi-Agent Support &nbsp;&bull;&nbsp;
                 Llama 3.3 70B via Groq &nbsp;&bull;&nbsp;
