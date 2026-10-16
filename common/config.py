@@ -81,8 +81,8 @@ class Settings:
     # Fast model: fallbacks and cheap baselines.
     # Defaults below are Groq free-tier models; see model_for() for per-provider
     # resolution so we never hard-code a vendor's id at the call sites.
-    primary_model: str = "llama-3.3-70b-versatile"
-    fallback_model: str = "llama-3.3-70b-versatile"
+    primary_model: str = "openai/gpt-oss-120b"
+    fallback_model: str = "openai/gpt-oss-20b"
     # Fine-tuned triage classifier (LoRA adapter on HF Hub).
     triage_base_model: str = "unsloth/gemma-3-4b-it"
     triage_hub_repo: str = "Harshith69/novapay-triage-gemma"
@@ -93,7 +93,7 @@ class Settings:
     # without touching any agent or evaluation code.
     provider_models: dict[str, tuple[str, str]] = field(
         default_factory=lambda: {
-            "groq": ("llama-3.3-70b-versatile", "llama-3.3-70b-versatile"),
+            "groq": ("openai/gpt-oss-120b", "openai/gpt-oss-20b"),
             "anthropic": ("claude-sonnet-4-6", "claude-haiku-4-5"),
             "gemini": ("gemini-2.0-flash", "gemini-2.0-flash-lite"),
             "ollama": ("llama3.1:8b", "llama3.2:3b"),
@@ -130,12 +130,13 @@ class Settings:
     request_timeout_s: float = 60.0
 
     # --- Pricing (USD per 1M tokens) for the cost dashboard --------------
-    # Groq free-tier models are $0; Anthropic kept for the paid fallback so the
+    # Groq models; Anthropic kept for the paid fallback so the
     # dashboard still computes a realistic figure if you switch providers.
     price_per_mtok: dict[str, tuple[float, float]] = field(
         default_factory=lambda: {
             # model: (input_price, output_price)
-            "llama-3.3-70b-versatile": (0.0, 0.0),
+            "openai/gpt-oss-120b": (0.15, 0.60),
+            "openai/gpt-oss-20b": (0.075, 0.30),
             "gemini-2.0-flash": (0.0, 0.0),
             "gemini-2.0-flash-lite": (0.0, 0.0),
             "claude-sonnet-4-6": (3.0, 15.0),
