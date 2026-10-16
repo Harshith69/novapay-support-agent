@@ -619,7 +619,7 @@ def build_app() -> gr.Blocks:
                 <span>Multi-Agent Orchestration</span>
                 <span>RAG + ChromaDB</span>
                 <span>QLoRA Fine-Tuned Triage</span>
-                <span>Llama 3.3 70B</span>
+                <span>GPT-OSS 120B</span>
                 <span>Hallucination Detection</span>
                 <span>Groq Inference</span>
             </div>
@@ -745,7 +745,7 @@ def build_app() -> gr.Blocks:
         <div class=\"footer-section\">
             <p>
                 NovaPay Multi-Agent Support &nbsp;&bull;&nbsp;
-                Llama 3.3 70B via Groq &nbsp;&bull;&nbsp;
+                GPT-OSS 120B via Groq &nbsp;&bull;&nbsp;
                 RAG + ChromaDB &nbsp;&bull;&nbsp;
                 QLoRA Gemma 3 4B
             </p>
