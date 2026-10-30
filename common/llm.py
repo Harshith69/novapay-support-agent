@@ -152,18 +152,24 @@ class LLMClient:
         raise LLMError(f"Unknown LLM provider: {self.provider!r}")
 
     def _retryable_errors(self):
-        """Vendor exception classes worth retrying. Falls back to Exception."""
+        """Return only known transient exceptions for the selected provider."""
         try:
             if self.provider == "groq":
                 from groq import RateLimitError, APITimeoutError, APIConnectionError, InternalServerError
+                return (RateLimitError, APITimeoutError, APIConnectionError, InternalServerError)
+            if self.provider == "ollama":
+                from openai import RateLimitError, APITimeoutError, APIConnectionError, InternalServerError
                 return (RateLimitError, APITimeoutError, APIConnectionError, InternalServerError)
             if self.provider == "anthropic":
                 import anthropic
                 return (anthropic.RateLimitError, anthropic.APITimeoutError,
                         anthropic.APIConnectionError, anthropic.InternalServerError)
-        except Exception:
-            pass
-        return (Exception,)
+            if self.provider == "gemini":
+                from google.api_core.exceptions import ResourceExhausted, DeadlineExceeded, ServiceUnavailable
+                return (ResourceExhausted, DeadlineExceeded, ServiceUnavailable)
+        except ImportError:
+            logger.warning("Provider retry exception classes unavailable; retries disabled.")
+        return ()
 
     # -- public -----------------------------------------------------------
     def complete(
@@ -193,10 +199,14 @@ class LLMClient:
                     input_tokens=in_tok, output_tokens=out_tok,
                     latency_ms=(time.perf_counter() - start) * 1000, stop_reason=stop,
                 )
-            except retryable as exc:  # type: ignore[misc]
+            except Exception as exc:
+                if not retryable or not isinstance(exc, retryable):
+                    raise LLMError(f"{self.provider} completion failed: {exc}") from exc
                 last_exc = exc
+                if attempt + 1 >= settings.api_max_retries:
+                    break
                 delay = settings.api_base_delay_s * (2 ** attempt) + random.uniform(0, 0.5)
-                logger.warning("[%s] API call failed (attempt %d/%d): %s — retry in %.1fs",
+                logger.warning("[%s] transient API failure (attempt %d/%d): %s — retry in %.1fs",
                                self.provider, attempt + 1, settings.api_max_retries, exc, delay)
                 time.sleep(delay)
 

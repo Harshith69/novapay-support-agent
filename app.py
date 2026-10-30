@@ -12,13 +12,14 @@ from __future__ import annotations
 
 import gradio as gr
 
-from common.logging_utils import get_logger, utc_now_iso
+from common.logging_utils import get_logger, utc_now_iso, append_jsonl
+from common.config import FEEDBACK_LOG_PATH
 from dashboard.metrics_tracker import log_interaction, compute_dashboard_metrics
 
 logger = get_logger("app")
 
 _orchestrator = None
-_last_interaction: dict = {}
+
 
 CUSTOM_CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -476,10 +477,9 @@ def _ensure_ready():
     return _orchestrator
 
 
-def process_query(query: str):
-    global _last_interaction
+def process_query(query: str, interaction_state: dict | None = None):
     if not query or not query.strip():
-        return ("Please describe your issue.", "", "", "", "", gr.update(visible=False))
+        return ("Please describe your issue.", "", "", "", "", gr.update(visible=False), interaction_state or {})
 
     try:
         handle_query = _ensure_ready()
@@ -489,7 +489,7 @@ def process_query(query: str):
             "Please ensure all dependencies are installed (`pip install -r requirements.txt`) "
             "and your API key is configured in `.env`."
         )
-        return (error_msg, "", "", "", "", gr.update(visible=False))
+        return (error_msg, "", "", "", "", gr.update(visible=False), interaction_state or {})
 
     try:
         result = handle_query(query)
@@ -500,7 +500,7 @@ def process_query(query: str):
             "I'm sorry — an unexpected error occurred while processing your query. "
             "Please try again, or contact support if the issue persists."
         )
-        return (error_msg, "", "", "", "", gr.update(visible=False))
+        return (error_msg, "", "", "", "", gr.update(visible=False), interaction_state or {})
 
     tri = result.get("triage_result", {})
     category = result.get("agent_used", "?")
@@ -541,7 +541,8 @@ def process_query(query: str):
         f"| \U0001f916 Triage source | `{tri.get('source', '?')}` |"
     )
 
-    _last_interaction = {
+    interaction = {
+        "interaction_id": __import__("uuid").uuid4().hex,
         "timestamp": utc_now_iso(),
         "query": query,
         "category": category,
@@ -555,15 +556,20 @@ def process_query(query: str):
         "hallucination_detected": hall.get("is_hallucination", False),
     }
 
-    log_interaction(_last_interaction)
+    log_interaction(interaction)
 
-    return (response, badges, sources, esc_md, metrics, gr.update(visible=True))
+    return (response, badges, sources, esc_md, metrics, gr.update(visible=True), interaction)
 
 
-def _record_feedback(rating: str, note: str = ""):
-    if _last_interaction:
-        log_interaction({**_last_interaction, "user_feedback": rating, "feedback_note": note})
-    emoji = "\U0001f44d" if rating == "up" else "\U0001f44e"
+def _record_feedback(interaction: dict | None, rating: str, note: str = ""):
+    if interaction:
+        append_jsonl(FEEDBACK_LOG_PATH, {
+            "interaction_id": interaction.get("interaction_id"),
+            "timestamp": utc_now_iso(),
+            "rating": rating,
+            "feedback_note": note,
+        })
+    emoji = "👍" if rating == "up" else "👎"
     return gr.update(value=f"{emoji} Thanks for your feedback!", visible=True)
 
 
@@ -697,18 +703,20 @@ def build_app() -> gr.Blocks:
             )
             feedback_ack = gr.Markdown(visible=False)
 
+            interaction_state = gr.State({})
             submit.click(
                 process_query,
-                inputs=query_in,
-                outputs=[response_out, badges, sources_out, escalation_out, metrics_out, feedback_row],
+                inputs=[query_in, interaction_state],
+                outputs=[response_out, badges, sources_out, escalation_out, metrics_out, feedback_row, interaction_state],
             )
-            up.click(lambda: _record_feedback("up"), outputs=feedback_ack)
+            up.click(lambda state: _record_feedback(state, "up"), inputs=interaction_state, outputs=feedback_ack)
             down.click(
-                lambda: (gr.update(visible=True), gr.update(visible=True)),
+                lambda: (gr.update(visible=True), gr.update(visible=False)),
                 outputs=[note_in, feedback_ack],
-            ).then(
-                lambda note: _record_feedback("down", note),
-                inputs=note_in,
+            )
+            note_in.submit(
+                lambda state, note: _record_feedback(state, "down", note),
+                inputs=[interaction_state, note_in],
                 outputs=feedback_ack,
             )
 

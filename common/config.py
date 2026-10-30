@@ -54,6 +54,7 @@ ROBUSTNESS_DIR = PROJECT_ROOT / "robustness"
 TRIAGE_TRAIN_PATH = PROCESSED_DIR / "triage_train.jsonl"
 TRIAGE_TEST_PATH = PROCESSED_DIR / "triage_test.jsonl"
 INTERACTION_LOG_PATH = LOGS_DIR / "interaction_log.jsonl"
+FEEDBACK_LOG_PATH = LOGS_DIR / "feedback_log.jsonl"
 
 _ALL_DIRS = [
     DATA_DIR, RAW_DIR, PROCESSED_DIR, KNOWLEDGE_BASE_DIR,

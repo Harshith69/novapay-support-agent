@@ -60,6 +60,17 @@ class SpecialistAgent:
         scores = [c["relevance_score"] for c in chunks]
         sources = sorted({c["source"] for c in chunks})
 
+        # Fail closed when policy retrieval is unavailable.
+        if not chunks or sum(c["relevance_score"] for c in chunks) / len(chunks) < settings.confidence_medium:
+            return {
+                "agent": self.name,
+                "response_text": "I cannot verify the applicable NovaPay policy right now. I will connect you with a specialist for confirmation.",
+                "sources_used": [], "confidence": "low", "retrieved_chunks": [],
+                "relevance_scores": [], "input_tokens": 0, "output_tokens": 0,
+                "latency_ms": round((time.perf_counter() - start) * 1000, 1),
+                "generation_status": "blocked_no_policy_context",
+            }
+
         # 2. Build the grounded prompt.
         user_prompt = (
             f"NovaPay policy context:\n{context}\n\n"
@@ -99,4 +110,5 @@ class SpecialistAgent:
             "input_tokens": in_tok,
             "output_tokens": out_tok,
             "latency_ms": round(latency_ms, 1),
+            "generation_status": "generated" if in_tok or out_tok else "fallback",
         }

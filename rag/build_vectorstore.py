@@ -12,6 +12,8 @@ Run:  ``python rag/build_vectorstore.py``
 from __future__ import annotations
 
 from pathlib import Path
+import hashlib
+import json
 
 from common.config import KNOWLEDGE_BASE_DIR, CHROMA_DIR, settings
 from common.logging_utils import get_logger
@@ -98,13 +100,32 @@ def build(reset: bool = True) -> int:
     return total
 
 
+def _knowledge_base_fingerprint() -> str:
+    """Hash KB filenames and contents so edits invalidate stale embeddings."""
+    digest = hashlib.sha256()
+    for path in sorted(KNOWLEDGE_BASE_DIR.glob("*.txt")):
+        digest.update(path.name.encode("utf-8"))
+        digest.update(path.read_bytes())
+    return digest.hexdigest()
+
+
 def ensure_built() -> None:
-    """Build the store only if it is missing — used at app startup."""
-    if not Path(CHROMA_DIR).exists() or not any(Path(CHROMA_DIR).iterdir()):
-        logger.info("Vector store not found — building on first run…")
+    """Build/rebuild the store when KB content changes."""
+    CHROMA_DIR.mkdir(parents=True, exist_ok=True)
+    manifest = CHROMA_DIR / "knowledge_base_manifest.json"
+    fingerprint = _knowledge_base_fingerprint()
+    stored = None
+    try:
+        stored = json.loads(manifest.read_text(encoding="utf-8")).get("fingerprint")
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
+        pass
+
+    if stored != fingerprint:
+        logger.info("Knowledge base changed or vector store missing — rebuilding…")
         build(reset=True)
+        manifest.write_text(json.dumps({"fingerprint": fingerprint}), encoding="utf-8")
     else:
-        logger.info("Vector store already present at %s", CHROMA_DIR)
+        logger.info("Vector store is current at %s", CHROMA_DIR)
 
 
 if __name__ == "__main__":

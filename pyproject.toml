@@ -7,7 +7,7 @@ name = "novapay-support-agent"
 version = "0.1.0"
 description = "Multi-agent fintech customer support system for NovaPay (fine-tuned triage + RAG specialists + evaluation + robustness)."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [tool.setuptools]
 # Top-level packages that must be importable from anywhere (editable install).
@@ -15,4 +15,4 @@ packages = ["common", "rag", "agents", "evaluation", "robustness", "dashboard", 
 
 [tool.ruff]
 line-length = 100
-target-version = "py39"
+target-version = "py310"
