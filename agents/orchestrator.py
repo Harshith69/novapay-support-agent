@@ -94,7 +94,7 @@ def _check_escalation(query: str, triage_result: dict, specialist_result: dict) 
     if triage_result.get("urgency") == "high" and specialist_result.get("confidence") == "low":
         reasons.append("high_urgency_low_confidence")
 
-    if specialist_result.get("generation_status") in ("fallback", "blocked_no_policy_context"):
+    if specialist_result.get("generation_status") in ("fallback", "blocked_no_policy_context", "blocked_by_verification"):
         reasons.append("specialist_generation_unavailable")
 
     return (len(reasons) > 0, reasons)
