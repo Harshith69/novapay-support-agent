@@ -500,7 +500,7 @@ def process_query(query: str, interaction_state: dict | None = None):
             "I'm sorry — an unexpected error occurred while processing your query. "
             "Please try again, or contact support if the issue persists."
         )
-        return (error_msg, "", "", "", "", gr.update(visible=False))
+        return (error_msg, "", "", "", "", gr.update(visible=False), interaction_state or {})
 
     tri = result.get("triage_result", {})
     category = result.get("agent_used", "?")
@@ -569,7 +569,7 @@ def _record_feedback(interaction: dict | None, rating: str, note: str = ""):
             "rating": rating,
             "feedback_note": note,
         })
-    emoji = "\\U0001f44d" if rating == "up" else "\\U0001f44e"
+    emoji = "👍" if rating == "up" else "👎"
     return gr.update(value=f"{emoji} Thanks for your feedback!", visible=True)
 
 
