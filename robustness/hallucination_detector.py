@@ -33,11 +33,11 @@ def detect_hallucination(response: str, retrieved_chunks: list[str]) -> dict[str
     On any failure returns a safe 'no hallucination detected' result so the
     guardrail never blocks a legitimate response due to checker errors.
     """
-    safe_default = {"hallucinated_claims": [], "is_hallucination": False, "severity": "none"}
-    if not response.strip():
-        return safe_default
+    unsafe_default = {"hallucinated_claims": [], "is_hallucination": True, "severity": "high", "check_status": "error"}
+    if not response or not response.strip() or not retrieved_chunks:
+        return {**unsafe_default, "check_status": "unverifiable"}
 
-    context = "\n\n".join(f"[chunk {i}] {c}" for i, c in enumerate(retrieved_chunks)) or "(no context)"
+    context = "\n\n".join(f"[chunk {i}] {c}" for i, c in enumerate(retrieved_chunks))
     user_prompt = (
         f"Agent Response:\n{response}\n\n"
         f"Knowledge Base Chunks the agent had access to:\n{context}\n\n"
@@ -54,21 +54,21 @@ def detect_hallucination(response: str, retrieved_chunks: list[str]) -> dict[str
         )
     except LLMError as exc:
         logger.error("Hallucination check failed: %s", exc)
-        return safe_default
+        return unsafe_default
 
     parsed = extract_json(result.text)
     if not isinstance(parsed, dict):
-        return safe_default
+        return unsafe_default
 
-    claims = parsed.get("hallucinated_claims") or []
-    severity = parsed.get("severity", "none")
-    if severity not in ("none", "low", "high"):
-        severity = "high" if claims else "none"
-    return {
-        "hallucinated_claims": claims,
-        "is_hallucination": bool(parsed.get("is_hallucination", bool(claims))),
-        "severity": severity,
-    }
+    claims = parsed.get("hallucinated_claims")
+    severity = parsed.get("severity")
+    flagged = parsed.get("is_hallucination")
+    if not isinstance(claims, list) or not all(isinstance(x, str) for x in claims) or not isinstance(flagged, bool) or severity not in ("none", "low", "high"):
+        return unsafe_default
+    flagged = flagged or bool(claims)
+    if flagged and severity == "none":
+        severity = "high"
+    return {"hallucinated_claims": claims, "is_hallucination": flagged, "severity": severity, "check_status": "passed"}
 
 
 if __name__ == "__main__":
