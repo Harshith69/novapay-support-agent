@@ -61,7 +61,7 @@ class SpecialistAgent:
         sources = sorted({c["source"] for c in chunks})
 
         # Fail closed when policy retrieval is unavailable.
-        if not chunks:
+        if not chunks or sum(c["relevance_score"] for c in chunks) / len(chunks) < settings.confidence_medium:
             return {
                 "agent": self.name,
                 "response_text": "I cannot verify the applicable NovaPay policy right now. I will connect you with a specialist for confirmation.",
