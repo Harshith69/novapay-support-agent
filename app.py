@@ -561,10 +561,15 @@ def process_query(query: str, interaction_state: dict | None = None):
     return (response, badges, sources, esc_md, metrics, gr.update(visible=True), interaction)
 
 
-def _record_feedback(rating: str, note: str = ""):
-    if _last_interaction:
-        log_interaction({**_last_interaction, "user_feedback": rating, "feedback_note": note})
-    emoji = "\U0001f44d" if rating == "up" else "\U0001f44e"
+def _record_feedback(interaction: dict | None, rating: str, note: str = ""):
+    if interaction:
+        append_jsonl(FEEDBACK_LOG_PATH, {
+            "interaction_id": interaction.get("interaction_id"),
+            "timestamp": utc_now_iso(),
+            "rating": rating,
+            "feedback_note": note,
+        })
+    emoji = "\\U0001f44d" if rating == "up" else "\\U0001f44e"
     return gr.update(value=f"{emoji} Thanks for your feedback!", visible=True)
 
 
@@ -698,18 +703,20 @@ def build_app() -> gr.Blocks:
             )
             feedback_ack = gr.Markdown(visible=False)
 
+            interaction_state = gr.State({})
             submit.click(
                 process_query,
-                inputs=query_in,
-                outputs=[response_out, badges, sources_out, escalation_out, metrics_out, feedback_row],
+                inputs=[query_in, interaction_state],
+                outputs=[response_out, badges, sources_out, escalation_out, metrics_out, feedback_row, interaction_state],
             )
-            up.click(lambda: _record_feedback("up"), outputs=feedback_ack)
+            up.click(lambda state: _record_feedback(state, "up"), inputs=interaction_state, outputs=feedback_ack)
             down.click(
-                lambda: (gr.update(visible=True), gr.update(visible=True)),
+                lambda: (gr.update(visible=True), gr.update(visible=False)),
                 outputs=[note_in, feedback_ack],
-            ).then(
-                lambda note: _record_feedback("down", note),
-                inputs=note_in,
+            )
+            note_in.submit(
+                lambda state, note: _record_feedback(state, "down", note),
+                inputs=[interaction_state, note_in],
                 outputs=feedback_ack,
             )
 
