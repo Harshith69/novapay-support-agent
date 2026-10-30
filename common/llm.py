@@ -154,7 +154,10 @@ class LLMClient:
     def _retryable_errors(self):
         """Return only known transient exceptions for the selected provider."""
         try:
-            if self.provider in ("groq", "ollama"):
+            if self.provider == "groq":
+                from groq import RateLimitError, APITimeoutError, APIConnectionError, InternalServerError
+                return (RateLimitError, APITimeoutError, APIConnectionError, InternalServerError)
+            if self.provider == "ollama":
                 from openai import RateLimitError, APITimeoutError, APIConnectionError, InternalServerError
                 return (RateLimitError, APITimeoutError, APIConnectionError, InternalServerError)
             if self.provider == "anthropic":
