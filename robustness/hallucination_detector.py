@@ -30,8 +30,8 @@ SYSTEM_PROMPT = (
 def detect_hallucination(response: str, retrieved_chunks: list[str]) -> dict[str, Any]:
     """Return {hallucinated_claims, is_hallucination, severity}.
 
-    On any failure returns a safe 'no hallucination detected' result so the
-    guardrail never blocks a legitimate response due to checker errors.
+    On missing context or checker failure returns an unverifiable/error status.
+    Callers must suppress the generated response and escalate in those cases.
     """
     unsafe_default = {"hallucinated_claims": [], "is_hallucination": True, "severity": "high", "check_status": "error"}
     if not response or not response.strip() or not retrieved_chunks:
