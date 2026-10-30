@@ -151,7 +151,7 @@ def handle_query(query: str, run_hallucination_check: bool = True) -> dict[str, 
                     response_text, specialist_result["retrieved_chunks"]
                 )
                 if hallucination.get("check_status") != "passed" or (
-                    hallucination.get("is_hallucination") and hallucination.get("severity") == "high"
+                    hallucination.get("is_hallucination")
                 ):
                     log_event("hallucinations.log", query=query,
                               claims=hallucination.get("hallucinated_claims", []),
@@ -162,7 +162,16 @@ def handle_query(query: str, run_hallucination_check: bool = True) -> dict[str, 
                     )
                     specialist_result["generation_status"] = "blocked_by_verification"
             except Exception as exc:
-                logger.warning("Hallucination check skipped: %s", exc)
+                logger.error("Hallucination check failed closed: %s", exc)
+                hallucination = {
+                    "is_hallucination": True, "severity": "high",
+                    "hallucinated_claims": [], "check_status": "error",
+                }
+                response_text = (
+                    "I cannot safely verify this response against NovaPay policy. "
+                    "I will connect you with a specialist who can confirm the details."
+                )
+                specialist_result["generation_status"] = "blocked_by_verification"
 
         # 4. Escalation decision.
         escalation_required, reasons = _check_escalation(query, triage_result, specialist_result)
