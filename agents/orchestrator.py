@@ -45,16 +45,21 @@ def _escalation_matrix() -> str:
 
 
 def _extract_amount_inr(text: str) -> int | None:
-    """Pull the largest INR amount mentioned in the query, if any."""
-    # Matches ₹50,000 / Rs 50000 / 50000 INR / 1,00,000
-    candidates = re.findall(r"(?:₹|rs\.?|inr)?\s*([\d,]{3,})", text.lower())
-    amounts = []
-    for c in candidates:
-        try:
-            amounts.append(int(c.replace(",", "")))
-        except ValueError:
-            continue
-    return max(amounts) if amounts else None
+    """Extract explicit INR amounts; avoid treating IDs/phone numbers as money."""
+    patterns = [
+        r"(?:₹|rs\\.?|inr)\\s*([0-9][0-9,]*(?:\\.[0-9]+)?)\\s*(k|thousand|lakh|lac)?",
+        r"([0-9]+(?:\\.[0-9]+)?)\\s*(k|thousand|lakh|lac)\\s*(?:inr|rupees?)?",
+    ]
+    values = []
+    for pattern in patterns:
+        for amount, unit in re.findall(pattern, text.lower()):
+            try:
+                value = float(amount.replace(",", ""))
+                multiplier = {"k": 1000, "thousand": 1000, "lakh": 100000, "lac": 100000}.get(unit, 1)
+                values.append(int(value * multiplier))
+            except (TypeError, ValueError):
+                continue
+    return max(values) if values else None
 
 
 def _check_escalation(query: str, triage_result: dict, specialist_result: dict) -> tuple[bool, list[str]]:
@@ -64,15 +69,33 @@ def _check_escalation(query: str, triage_result: dict, specialist_result: dict) 
 
     if any(k in q for k in _HUMAN_KEYWORDS):
         reasons.append("explicit_human_request")
-    if any(k in q for k in _FRAUD_KEYWORDS):
+    if any(k in q for k in _FRAUD_KEYWORDS) or any(k in q for k in (
+        "sim swapped", "sim swap", "account takeover", "phone compromised",
+        "unknown login", "unrecognized transaction", "unrecognised transaction",
+    )):
         reasons.append("suspected_fraud")
 
+    if any(k in q for k in (
+        "ombudsman", "regulatory complaint", "court order", "legal notice",
+        "deceased account", "account holder died", "suicidal", "self harm",
+    )):
+        reasons.append("sensitive_or_regulatory_case")
+
+    if any(k in q for k in (
+        "bypass kyc", "skip kyc", "ignore previous instructions",
+        "reveal system prompt", "approve without checking", "bypass security",
+    )):
+        reasons.append("security_policy_violation")
+
     amount = _extract_amount_inr(query)
-    if amount and amount > settings.escalation_amount_inr:
+    if amount is not None and amount > settings.escalation_amount_inr:
         reasons.append(f"high_value_transaction({amount})")
 
     if triage_result.get("urgency") == "high" and specialist_result.get("confidence") == "low":
         reasons.append("high_urgency_low_confidence")
+
+    if specialist_result.get("generation_status") in ("fallback", "blocked_no_policy_context"):
+        reasons.append("specialist_generation_unavailable")
 
     return (len(reasons) > 0, reasons)
 
@@ -127,12 +150,17 @@ def handle_query(query: str, run_hallucination_check: bool = True) -> dict[str, 
                 hallucination = detect_hallucination(
                     response_text, specialist_result["retrieved_chunks"]
                 )
-                if hallucination.get("is_hallucination") and hallucination.get("severity") == "high":
-                    log_event("hallucinations.log", query=query, claims=hallucination.get("hallucinated_claims", []))
+                if hallucination.get("check_status") != "passed" or (
+                    hallucination.get("is_hallucination") and hallucination.get("severity") == "high"
+                ):
+                    log_event("hallucinations.log", query=query,
+                              claims=hallucination.get("hallucinated_claims", []),
+                              check_status=hallucination.get("check_status", "unknown"))
                     response_text = (
-                        "I want to make sure I give you accurate information. Let me "
-                        "connect you with a specialist who can confirm the exact details."
+                        "I cannot safely verify this response against NovaPay policy. "
+                        "I will connect you with a specialist who can confirm the details."
                     )
+                    specialist_result["generation_status"] = "blocked_by_verification"
             except Exception as exc:
                 logger.warning("Hallucination check skipped: %s", exc)
 
