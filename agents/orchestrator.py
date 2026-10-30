@@ -47,8 +47,8 @@ def _escalation_matrix() -> str:
 def _extract_amount_inr(text: str) -> int | None:
     """Extract explicit INR amounts; avoid treating IDs/phone numbers as money."""
     patterns = [
-        r"(?:₹|rs\\.?|inr)\\s*([0-9][0-9,]*(?:\\.[0-9]+)?)\\s*(k|thousand|lakh|lac)?",
-        r"([0-9]+(?:\\.[0-9]+)?)\\s*(k|thousand|lakh|lac)\\s*(?:inr|rupees?)?",
+        r"(?:₹|rs\.?|inr)\s*([0-9][0-9,]*(?:\.[0-9]+)?)\s*(k|thousand|lakh|lac)?",
+        r"([0-9]+(?:\.[0-9]+)?)\s*(k|thousand|lakh|lac)\s*(?:inr|rupees?)?",
     ]
     values = []
     for pattern in patterns:
